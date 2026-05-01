@@ -29,7 +29,7 @@ def MakeInterpolator(date,altmin,altmax):
     # altRes=5
     latRes=3
     lonRes=3
-    altRes=3
+    altRes=5
     lats=np.linspace(-90,90,latRes)
     lons=np.linspace(-180,180,lonRes)
     if altmin<200:
@@ -68,6 +68,7 @@ def MakeInterpolator(date,altmin,altmax):
 # print(IT([0,0,500]))
     
     
-    
+# def TestInterp():
+#     ITP= MakeInterpolator(Time("2017-04-05"), 661-250,661+50)
     
     # return 0

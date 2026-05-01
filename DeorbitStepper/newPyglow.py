@@ -315,6 +315,36 @@ def MassDensity(): #prints equivalent of number density plot in terms of mass de
     # plt.savefig('NumberDensity.png',dpi=300)
     # plt.show()
     # return 0
+def CheckRange():
+
+    Data1=DensitySweepAlt(15.6, -1.2, np.array(np.linspace(150,1000,100)), datetime(2022, 8, 22, 18, 0).astimezone(UTC))
+    Data2=DensitySweepAlt(42.6, -71.2, np.array(np.linspace(150,1000,100)), datetime(2020, 8, 22, 18, 0).astimezone(UTC))
+    Data3=DensitySweepAlt(15.6, -1.2, np.array(np.linspace(150,1000,100)), datetime(2016, 8, 22, 18, 0).astimezone(UTC))
+    Data4=DensitySweepAlt(42.6, -71.2, np.array(np.linspace(150,1000,100)), datetime(2018, 8, 22, 18, 0).astimezone(UTC))
+    Data5=DensitySweepAlt(-24.6, 50.2, np.array(np.linspace(150,1000,100)), datetime(2021, 8, 22, 18, 0).astimezone(UTC))
+    Data6=DensitySweepAlt(42.6, 10.2, np.array(np.linspace(150,1000,100)), datetime(2019, 8, 22, 18, 0).astimezone(UTC))
+    Data7=DensitySweepAlt(56.1, 70.2, np.array(np.linspace(150,1000,100)), datetime(2015, 8, 22, 18, 0).astimezone(UTC))
+    Data8=DensitySweepAlt(42.6, -71.2, np.array(np.linspace(150,1000,100)), datetime(2014, 8, 22, 18, 0).astimezone(UTC))
+    plt.figure()
+    plt.scatter(Data1['Av_M'],Data1['N_i'])
+    plt.scatter(Data2['Av_M'],Data2['N_i'])
+    plt.scatter(Data3['Av_M'],Data3['N_i'])
+    plt.scatter(Data4['Av_M'],Data4['N_i'])
+    plt.scatter(Data5['Av_M'],Data5['N_i'])
+    plt.scatter(Data6['Av_M'],Data6['N_i'])
+    plt.scatter(Data7['Av_M'],Data7['N_i'])
+    plt.scatter(Data8['Av_M'],Data8['N_i'])
+
+
+    print(np.max([np.max(Data1['Av_M']),np.max(Data2['Av_M']),np.max(Data3['Av_M']),np.max(Data4['Av_M']),np.max(Data5['Av_M']),np.max(Data7['Av_M']),np.max(Data8['Av_M'])]))
+    print(np.min([np.max(Data1['Av_M']),np.min(Data2['Av_M']),np.min(Data3['Av_M']),np.min(Data4['Av_M']),np.min(Data5['Av_M']),np.min(Data7['Av_M']),np.min(Data8['Av_M'])]))
+    print(np.max([np.max(Data1['N_i']),np.max(Data2['N_i']),np.max(Data3['N_i']),np.max(Data4['N_i']),np.max(Data5['N_i']),np.max(Data7['N_i']),np.max(Data8['N_i'])]))
+    print(np.min([np.max(Data1['N_i']),np.min(Data2['N_i']),np.min(Data3['N_i']),np.min(Data4['N_i']),np.min(Data5['N_i']),np.min(Data7['N_i']),np.min(Data8['N_i'])]))
+    plt.yscale('log')
+    plt.xlabel('Ion Mass (amu)')
+    plt.ylabel('Ion density')
+    return 0
+# CheckRange()
 # MassDensity()
 # PlotAltSweep2()
 # galt=np.array(400)

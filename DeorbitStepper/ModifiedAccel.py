@@ -18,6 +18,7 @@ from iri20py import Iri2020, alt_grid
 from msis21py import NrlMsis21
 import newPyglow as NPG
 import InterpDraft as ID
+import LafleurInterp as LI
 try:
     import erfa
 except ImportError:
@@ -260,6 +261,13 @@ class AccelDrag2(Accel):
         kw.update(kwargs)
         mjd_tt = _gpsToTT(t)
         self.Recalc_Int=kw['RSI']
+        Charged=True
+        if Charged:
+            self.lw=kw['lw']#Wire Length
+            self.phi=kw['phi']
+            self.rw=kw['rw']
+            self.MaxArea=kw['maxArea']
+            self.LInt=LI.LoadOrCreateInterpolator(self.rw, self.phi)
 
         if _T is None: #precession/nutation rotation matrix (from gcrf to true of date)
             if self._t is None or np.abs(t - self._t) > self.recalc_threshold:
@@ -268,8 +276,8 @@ class AccelDrag2(Accel):
             
             _T = self._T
         
-        print('mjd_tt '+str(mjd_tt))
-        print('t '+str(t))
+        # print('mjd_tt '+str(mjd_tt))
+        # print('t '+str(t))
 
         #Need to convert to ECEF for lat/long
         r_sun = sunPos(t)
@@ -290,20 +298,30 @@ class AccelDrag2(Accel):
         print('Steps: '+str( self.steps ))
         if self.steps==0 or self.steps==self.Recalc_Int:
             self.steps=0
-            interpArr=ID.MakeInterpolator(dt, height-150,height+50)
+            interpArr=ID.MakeInterpolator(dt, height-250,height+100)
             self.InterpRhoM=interpArr[0]
             self.interpNI=interpArr[1]
             self.interpAM=interpArr[2]
         self.steps=self.steps+1
         
         rhomn =self.InterpRhoM([lat,lon,height])
+        
         # rhomi, rhomn,rhoni,avgm =FindDensity(lat,lon,height,dt)
-
+        print('mjd_tt '+str(mjd_tt))
+        print('t '+str(t))
         print('Step count: '+str(self.steps))
         print('RSI: '+str(self.Recalc_Int))
+        print('Alt: '+str(height))
+        print('lat: '+str(lat))
+        print('lon: '+str(lon))
 
         density=float(rhomn[0])
-        
+        print('Density: '+str(density))
+        NQ=float(rhomn[1])
+        AVM=float(rhomn[2])
+        print('Ion Number Density: '+str(NQ)+' m^(-3)')
+        print('Average Ion Mass: '+str(AVM)+' (amu)')
+
         if not np.isfinite(density):
             raise ValueError("non finite density")
         # print(kw['CC'])#CC is succesfully passed, may just specify charge and wire length this way
@@ -312,7 +330,10 @@ class AccelDrag2(Accel):
         # print('Second Density: '+str(rhomn))
         # print(str(type(rhomn)))
         # print('Second Density: '+str(float(rhomn)))
-
+        if Charged:
+            CC=self.LInt([np.log10(NQ),AVM])
+            print(CC)
+            print('Charged drag calculation goes here!')
 
         
         a_tod = -0.5 * kw['CD'] * kw['area'] / kw['mass'] * density * v_rel * norm(v_rel)
